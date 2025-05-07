@@ -9,29 +9,78 @@
       font-family: sans-serif;
       background-color: #111;
       padding: 2rem;
-      border-radius: 16px;
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
       color: #fff;
     }
+
     #chatbox {
+      width: 100%;
       max-width: 600px;
-      margin: 0 auto;
-      background-color: #111;
+      background-color: #222;
       padding: 2rem;
       border-radius: 16px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      display: flex;
+      flex-direction: column;
+      height: 80vh;
+      overflow: hidden;
     }
+
+    #chat {
+      flex-grow: 1;
+      overflow-y: auto;
+      margin-bottom: 1rem;
+      padding-right: 1rem;
+    }
+
     #chatbox input[type="text"] {
       padding: 0.75rem;
       border-radius: 8px;
-      background-color: #222;
+      background-color: #333;
       color: #fff;
       font-size: 14px;
+      border: none;
+      margin-bottom: 1rem;
+      width: 100%;
     }
+
     #chatbox button {
       padding: 0.75rem;
       border-radius: 8px;
-      background-color: #222;
+      background-color: #444;
       color: #fff;
       font-size: 14px;
+      border: none;
+      cursor: pointer;
+    }
+
+    #chatbox button:hover {
+      background-color: #555;
+    }
+
+    .message {
+      margin-bottom: 0.75rem;
+      padding: 0.75rem;
+      border-radius: 8px;
+      background-color: #333;
+    }
+
+    .user {
+      background-color: #444;
+    }
+
+    .assistant {
+      background-color: #555;
+      text-align: left;
+    }
+
+    .system {
+      background-color: #666;
+      color: red;
     }
   </style>
 </head>
@@ -53,6 +102,7 @@
 
     function appendMessage(role, text) {
       const msg = document.createElement('div');
+      msg.classList.add('message', role);
       msg.innerHTML = `<strong>${role}:</strong> ${text}`;
       chatDiv.appendChild(msg);
       chatDiv.scrollTop = chatDiv.scrollHeight;
@@ -62,7 +112,7 @@
       const userMessage = userInput.value.trim();
       if (userMessage === "") return;
 
-      appendMessage("User", userMessage);
+      appendMessage("user", userMessage);
       userInput.value = '';
 
       try {
@@ -96,10 +146,10 @@
         });
 
         const messageData = await messageRes.json();
-        appendMessage("Assistant", messageData.choices[0].message.content);
+        appendMessage("assistant", messageData.choices[0].message.content);
       } catch (error) {
         console.error('Error sending message:', error);
-        appendMessage("System", "Something went wrong. Please try again.");
+        appendMessage("system", "Something went wrong. Please try again.");
       }
     }
   </script>
