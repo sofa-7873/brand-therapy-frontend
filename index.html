@@ -1,0 +1,144 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="2575.5">
+  <style type="text/css">
+    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000}
+    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000; min-height: 14.0px}
+    span.s1 {font-kerning: none}
+  </style>
+</head>
+<body>
+<p class="p1"><span class="s1">&lt;!DOCTYPE html&gt;</span></p>
+<p class="p1"><span class="s1">&lt;html lang="en"&gt;</span></p>
+<p class="p1"><span class="s1">&lt;head&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;meta charset="UTF-8"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;title&gt;Brand Therapy Chatbot&lt;/title&gt;</span></p>
+<p class="p1"><span class="s1">&lt;/head&gt;</span></p>
+<p class="p1"><span class="s1">&lt;body&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;div id="chatbox" style="max-width:600px;margin:4rem auto;font-family:sans-serif;background:#111;padding:2rem;border-radius:16px;color:#fff;"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem;"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;strong style="font-size:14px;"&gt;brand therapy&lt;/strong&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;label style="font-size:12px;cursor:pointer;color:#ccc;"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;input type="checkbox" id="toggleMode" style="margin-right:4px;"&gt;dark mode</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;/label&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;div id="chatlog" style="background:#1a1a1a;padding:1rem;height:300px;overflow-y:auto;border-radius:8px;margin-bottom:1rem;font-size:14px;"&gt;&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;div style="display:flex;gap:0.5rem;"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;input id="userInput" type="text" placeholder="what brings you here today?" style="flex:1;padding:0.75rem;border:none;border-radius:8px;background:#222;color:#fff;font-size:14px;" inputmode="text"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;button id="sendBtn" onclick="sendMessage()" style="padding:0.75rem 1.5rem;border:none;background:#F5F5F4;color:#0D0D0D;border-radius:8px;font-size:14px;"&gt;send&lt;/button&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;script&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>const API_KEY = "your_api_key_here";</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>const ASSISTANT_ID = "your_assistant_id_here";</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>let threadId = null;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>const chatlog = document.getElementById('chatlog');</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>const userInput = document.getElementById('userInput');</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>const sendBtn = document.getElementById('sendBtn');</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>function appendMessage(role, text) {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>const msg = document.createElement('div');</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>msg.innerHTML = `&lt;strong&gt;${role === 'user' ? 'you' : 'sofa'}:&lt;/strong&gt; ${text}`;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>msg.style.margin = '0.5rem 0';</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>msg.style.color = role === 'user' ? '#aaa' : '#fff';</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>msg.style.fontSize = '14px';</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>chatlog.appendChild(msg);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>chatlog.scrollTop = chatlog.scrollHeight;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>async function sendMessage() {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>const userMessage = userInput.value.trim();</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>if (!userMessage) return;</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>appendMessage('user', userMessage);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>userInput.value = '';</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>sendBtn.textContent = '...';</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>try {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>if (!threadId) {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">          </span>const threadRes = await fetch("https://api.openai.com/v1/threads", {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>method: "POST",</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>headers: {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">              </span>"Authorization": `Bearer ${API_KEY}`,</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">              </span>"Content-Type": "application/json"</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">          </span>});</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">          </span>const threadData = await threadRes.json();</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">          </span>threadId = threadData.id;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>await fetch(`https://api.openai.com/v1/threads/${threadId}/messages`, {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">          </span>method: "POST",</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">          </span>headers: {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>"Authorization": `Bearer ${API_KEY}`,</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>"Content-Type": "application/json"</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">          </span>},</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">          </span>body: JSON.stringify({ role: "user", content: userMessage })</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>});</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>const runRes = await fetch(`https://api.openai.com/v1/threads/${threadId}/runs`, {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">          </span>method: "POST",</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">          </span>headers: {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>"Authorization": `Bearer ${API_KEY}`,</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>"Content-Type": "application/json"</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">          </span>},</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">          </span>body: JSON.stringify({ assistant_id: ASSISTANT_ID })</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>});</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>const runData = await runRes.json();</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>const runId = runData.id;</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>let status = "in_progress";</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>while (status === "in_progress" || status === "queued") {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">          </span>await new Promise(res =&gt; setTimeout(res, 1500));</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">          </span>const check = await fetch(`https://api.openai.com/v1/threads/${threadId}/runs/${runId}`, {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>method: "GET",</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>headers: {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">              </span>"Authorization": `Bearer ${API_KEY}`,</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">              </span>"Content-Type": "application/json"</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">          </span>});</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">          </span>const response = await check.json();</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">          </span>status = response.status;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>const messagesRes = await fetch(`https://api.openai.com/v1/threads/${threadId}/messages`, {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">          </span>method: "GET",</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">          </span>headers: {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>"Authorization": `Bearer ${API_KEY}`,</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>"Content-Type": "application/json"</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">          </span>}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>});</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>const messagesData = await messagesRes.json();</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>const lastMessage = messagesData.data.reverse().find(m =&gt; m.role === 'assistant');</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>if (lastMessage &amp;&amp; lastMessage.content &amp;&amp; lastMessage.content[0].text) {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">          </span>appendMessage('assistant', lastMessage.content[0].text.value);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>} else {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">          </span>appendMessage('assistant', 'no response received from assistant.');</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>} catch (error) {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>appendMessage('assistant', 'something went wrong. open your browser console to debug.');</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>} finally {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>sendBtn.textContent = 'send';</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>userInput.addEventListener("keydown", (e) =&gt; {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>if (e.key === "Enter") {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>e.preventDefault();</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>sendMessage();</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>});</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;/script&gt;</span></p>
+<p class="p1"><span class="s1">&lt;/body&gt;</span></p>
+<p class="p1"><span class="s1">&lt;/html&gt;</span></p>
+</body>
+</html>
